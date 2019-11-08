@@ -1,29 +1,4 @@
-const fs = require("fs");
-const util = require("util");
-const inquirer = require("inquirer");
-const axios = require("axios");
-const writeFileAsync = util.promisify(fs.writeFile);
-
-const questions = [
-   
-  {
-    type: "input",
-    message: "What is your name?",
-    name: "name"
-  },
-  {
-    type: "input",
-    message: "What is your GitHub username?",
-    name: "username"
-  },
-  {
-    type: "input",
-    message: "What is your favorite color?",
-    name: "color"
-  }
-];
-function generateHTML(userInput, res) {
-  return ` <!DOCTYPE html>
+ <!DOCTYPE html>
     <html lang="en">
        <head>
           <meta charset="UTF-8" />
@@ -167,34 +142,34 @@ function generateHTML(userInput, res) {
        <body>
           <div class="wrapper">
              <div class="photo-header">
-                <img src=${res.data.avatar_url} alt="Photo of ${res.data.name}" />
+                <img src=https://avatars2.githubusercontent.com/u/54386857?v=4 alt="Photo of William Sams III" />
                 <h1>Hi!</h1>
                 <h2>
-                My name is ${res.data.name}!</h1>
+                My name is William Sams III!</h1>
                 <h5></h5>
                 <nav class="links-nav">
-                   <a class="nav-link" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/place/${res.data.location}"><i class="fas fa-location-arrow"></i> ${res.data.location}</a>
-                   <a class="nav-link" target="_blank" rel="noopener noreferrer" href="https://github.com/${res.data.username}"><i class="fab fa-github-alt"></i> GitHub</a>        
+                   <a class="nav-link" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/place/Phoenix, Arizona"><i class="fas fa-location-arrow"></i> Phoenix, Arizona</a>
+                   <a class="nav-link" target="_blank" rel="noopener noreferrer" href="https://github.com/undefined"><i class="fab fa-github-alt"></i> GitHub</a>        
                 </nav>
              </div>
              <main>
                 <div class="container">
                 <div class="row">
                    <div class="col">
-                      <h3>${res.data.bio} </h3>
+                      <h3>newbie, lost with confidence </h3>
                    </div>
                    </div>
                    <div class="row">
                    <div class="col">
                       <div class="card">
                         <h3>Public Repositories</h3>
-                        <h4>${res.data.public_repos}</h4>
+                        <h4>13</h4>
                       </div>
                    </div>
                     <div class="col">
                     <div class="card">
                       <h3>Followers</h3>
-                      <h4>${res.data.followers}</h4>
+                      <h4>4</h4>
                     </div>
                    </div>
                    </div>
@@ -208,7 +183,7 @@ function generateHTML(userInput, res) {
                     <div class="col">
                     <div class="card">
                       <h3>Following</h3>
-                      <h4>${res.data.following}</h4>
+                      <h4>3</h4>
                       </div>
                    </div>
                    </div>
@@ -216,20 +191,4 @@ function generateHTML(userInput, res) {
              </main>
           </div>
        </body>
-    </html>`;
-}
-
-async function promptUser() {
-  const userInput = await inquirer.prompt(questions);
-  console.log(userInput.data);
-  const CLIENT_ID = "Iv1.58a221594db896a7";
-
-  const CLIENT_SECRET = "ec9d0d86435af2863130af950728312a20dd8d73";
-  const queryUrl = `https://api.github.com/users/${userInput.username}?client_id=${process.env.CLIENT_ID}&client_secret=${process.env.CLIENT_SECRET}`;
-  axios.get(queryUrl).then(function(res) {
-    const html = generateHTML(userInput, res);
-    writeFileAsync("index.html", html);
-  });
-}
-promptUser();
-// https://api.github.com/users/wsams11?client_id=Iv1.58a221594db896a7&client_secret=ec9d0d86435af2863130af950728312a20dd8d73
+    </html>
