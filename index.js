@@ -22,7 +22,8 @@ const questions = [
     name: "color"
   }
 ];
-function generateHTML(userInput, res) {
+function generateHTML(userInput, res, getStars) {
+ 
   return ` <!DOCTYPE html>
     <html lang="en">
        <head>
@@ -58,7 +59,7 @@ function generateHTML(userInput, res) {
              font-family: 'Cabin', sans-serif;
              }
              main {
-             background-color: #E9EDEE;
+             background-color: white;
              height: auto;
              padding-top: 30px;
              }
@@ -174,7 +175,7 @@ function generateHTML(userInput, res) {
                 <h5></h5>
                 <nav class="links-nav">
                    <a class="nav-link" target="_blank" rel="noopener noreferrer" href="https://www.google.com/maps/place/${res.data.location}"><i class="fas fa-location-arrow"></i> ${res.data.location}</a>
-                   <a class="nav-link" target="_blank" rel="noopener noreferrer" href="https://github.com/${res.data.username}"><i class="fab fa-github-alt"></i> GitHub</a>        
+                   <a class="nav-link" target="_blank" rel="noopener noreferrer" href="${res.data.html_url}"><i class="fab fa-github-alt"></i> GitHub</a>        
                 </nav>
              </div>
              <main>
@@ -202,7 +203,7 @@ function generateHTML(userInput, res) {
                    <div class="col">
                    <div class="card">
                       <h3>GitHub Stars</h3>
-                      <h4>0</h4>
+                      <h4>${getStars}</h4>
                       </div>
                    </div>
                     <div class="col">
@@ -219,15 +220,38 @@ function generateHTML(userInput, res) {
     </html>`;
 }
 
+function getStars(userInput){
+  const queryUrl = `https://api.github.com/users/${userInput.username}/repos?client_id=${process.env.CLIENT_ID}&client_secret=${process.env.CLIENT_SECRET}`;
+  axios.get(queryUrl).then(function(res) {
+   
+   let totalStars = 0;
+   for (var i = 0; i < res.data.length; i ++){
+     totalStars = totalStars + res.data[i].stargazers_count;
+   }
+   return totalStars;
+ 
+  });
+}
+
 async function promptUser() {
   const userInput = await inquirer.prompt(questions);
   console.log(userInput.data);
+  getStars(userInput);
+  
   const CLIENT_ID = "Iv1.58a221594db896a7";
+
 
   const CLIENT_SECRET = "ec9d0d86435af2863130af950728312a20dd8d73";
   const queryUrl = `https://api.github.com/users/${userInput.username}?client_id=${process.env.CLIENT_ID}&client_secret=${process.env.CLIENT_SECRET}`;
   axios.get(queryUrl).then(function(res) {
-    const html = generateHTML(userInput, res);
+  
+    // let stars = 0;
+    //const starCounter = (stars, curr) => stars + curr;
+    //let totalStars = res.data.stargazers_count.reduce(starCounter);
+    //console.log(totalStars);
+  
+    
+    const html = generateHTML(userInput, res, getStars(userInput));
     writeFileAsync("index.html", html);
   });
 }
